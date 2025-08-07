@@ -43,6 +43,9 @@ def get_latest_file_url(base_url):
     now = datetime.now()
     current_year = now.year-1
 
+@st.cache_data
+def cached_read_excel(file_io, sheets):
+    return pd.read_excel(file_io, sheet_name=sheets)
     
     while True:
         file_url = get_file_url(base_url, current_year)
