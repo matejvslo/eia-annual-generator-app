@@ -421,8 +421,8 @@ def main():
         if latest_file and previous_file:
             sheets = ['Operable', 'Proposed', 'Retired and Canceled']
             
-            latest_dfs = pd.read_excel(latest_file_io, sheet_name=sheets)
-            previous_dfs = pd.read_excel(previous_file_io, sheet_name=sheets)
+            latest_dfs = cached_read_excel(latest_file_io, sheet_name=sheets)
+            previous_dfs = cached_read_excel(previous_file_io, sheet_name=sheets)
 
             latest_sums = {sheet: sum_nameplate_capacity(latest_dfs[sheet], sheet) for sheet in sheets}
             previous_sums = {sheet: sum_nameplate_capacity(previous_dfs[sheet], sheet) for sheet in sheets}
