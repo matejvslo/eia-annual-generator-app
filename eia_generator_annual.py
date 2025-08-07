@@ -38,14 +38,14 @@ def file_exists(url):
     except requests.RequestException:
         return False
 
+@st.cache_data
+def cached_read_excel(file_io, sheets):
+    return pd.read_excel(file_io, sheet_name=sheets)
+
 def get_latest_file_url(base_url):
     """Finds the latest file URL."""
     now = datetime.now()
     current_year = now.year-1
-
-@st.cache_data
-def cached_read_excel(file_io, sheets):
-    return pd.read_excel(file_io, sheet_name=sheets)
     
     while True:
         file_url = get_file_url(base_url, current_year)
