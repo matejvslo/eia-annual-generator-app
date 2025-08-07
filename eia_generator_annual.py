@@ -55,7 +55,11 @@ def get_latest_file_url(base_url):
             file_url = f"{base_url}{current_year}ER.zip"
             ER_status = True
             return file_url, current_year, ER_status
-        
+
+def get_previous_file_url(base_url, year):
+    """Constructs the URL for the previous year's file."""
+    
+    return f"{base_url}{year-1}.zip"
 
 @st.cache_data
 def download_excel_file(url, year, ER_status):
