@@ -39,8 +39,8 @@ def file_exists(url):
         return False
 
 @st.cache_data
-def cached_read_excel(file_io, sheets):
-    return pd.read_excel(file_io, sheet_name=sheets)
+def cached_read_excel(file_io, sheet_name=None):
+    return pd.read_excel(file_io, sheet_name=sheet_name)
 
 def get_latest_file_url(base_url):
     """Finds the latest file URL."""
