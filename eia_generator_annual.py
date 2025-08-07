@@ -57,40 +57,37 @@ def get_latest_file_url(base_url):
             return file_url, current_year, ER_status
         
 
-def get_previous_file_url(base_url, year):
-    """Constructs the URL for the previous year's file."""
-    
-    return f"{base_url}{year-1}.zip"
-
+@st.cache_data
 def download_excel_file(url, year, ER_status):
     """
     Downloads and extracts the specific Excel file from the ZIP archive.
     Returns tuple: (BytesIO of Excel file, Excel filename string)
     """
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
+    with st.spinner("Downloading file..."):
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
 
-        with zipfile.ZipFile(BytesIO(response.content)) as z:
-            # Build expected Excel filename inside ZIP
-            filename_expected = f"3_1_Generator_Y{year}"
-            if ER_status:
-                filename_expected += "_Early_Release"
-            filename_expected += ".xlsx"
+            with zipfile.ZipFile(BytesIO(response.content)) as z:
+                # Build expected Excel filename inside ZIP
+                filename_expected = f"3_1_Generator_Y{year}"
+                if ER_status:
+                    filename_expected += "_Early_Release"
+                filename_expected += ".xlsx"
 
-            if filename_expected not in z.namelist():
-                st.error(f"Excel file '{filename_expected}' not found inside ZIP archive.")
-                return None, None
+                if filename_expected not in z.namelist():
+                    st.error(f"Excel file '{filename_expected}' not found inside ZIP archive.")
+                    return None, None
 
-            excel_data = z.read(filename_expected)
-            return BytesIO(excel_data), filename_expected
+                excel_data = z.read(filename_expected)
+                return BytesIO(excel_data), filename_expected
 
-    except requests.exceptions.RequestException as err:
-        st.error(f"Request Exception occurred: {err}")
-        return None, None
-    except zipfile.BadZipFile:
-        st.error("Downloaded file is not a valid ZIP archive.")
-        return None, None
+        except requests.exceptions.RequestException as err:
+            st.error(f"Request Exception occurred: {err}")
+            return None, None
+        except zipfile.BadZipFile:
+            st.error("Downloaded file is not a valid ZIP archive.")
+            return None, None
 
 def rename_columns(df, sheet_name=None):
     """Renames columns based on the sheet name."""
